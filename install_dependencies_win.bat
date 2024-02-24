@@ -16,6 +16,7 @@ if %ERRORLEVEL% NEQ 0 (
 )
 echo Installing necessary modules...
 pip install googletrans==4.0.0-rc1
+pip install discord.py
 :end
 echo Installation completed.
 pause
