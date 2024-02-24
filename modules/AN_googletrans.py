@@ -16,8 +16,7 @@ def get_dest(src):
     if src in languages:
         dest = config[src]['DestLanguage']
     else:
-        exit("language not configured")
-        raise SystemExit
+        dest = src
     return dest
 
 def translate_text_auto(text):
@@ -35,10 +34,13 @@ def translate_text_auto(text):
     src = detect.lang
     print(f"detected language: {src}")
     dest = get_dest(src)
-
-    try:
-        translation = translator.translate(text, src=src, dest=dest)
-        return translation.text
-    except Exception as e:
-        print(f"An error occurred: {e}")
-        return
+    text = ""
+    if (src == dest):
+        text = (f"unconfigured language, detected language: {dest}")
+    else:
+        try:
+            translation = translator.translate(text, src=src, dest=dest)
+            text = translation.text
+        except Exception as e:
+            text = (f"An error occurred: {e}")
+    return text
