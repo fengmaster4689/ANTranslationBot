@@ -15,20 +15,6 @@ def bot_events(bot):
     async def on_ready():
         print(f'Logged in as {bot.user.name}')
 
-    # @bot.event
-    # async def on_message(message):
-    #     # Do not let the bot reply to itself or other bots
-    #     if message.author == bot.user or message.author.bot:
-    #         return
-
-    #     if message.content.startswith('!translate '):
-    #         original_text = message.content[len('!translate '):]
-    #         translated_text = translate_text_auto(original_text)
-    #         await message.channel.send(translated_text)
-        
-    #     # This line is necessary to process commands
-    #     await bot.process_commands(message)
-
 def bot_commands(bot):
     """ 
     creates the commands that the bot uses 
