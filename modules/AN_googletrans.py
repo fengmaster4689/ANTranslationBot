@@ -16,7 +16,8 @@ def get_dest(src):
     if src in languages:
         dest = config[src]['DestLanguage']
     else:
-        sys.exit("language not configured")
+        exit("language not configured")
+        raise SystemExit
     return dest
 
 def translate_text_auto(text):

@@ -1,6 +1,8 @@
+import os
+import sys
+import configparser
 import discord
 from discord.ext import commands
-import configparser
 from modules.AN_googletrans import *
 
 def bot_events(bot):
@@ -38,6 +40,12 @@ def bot_commands(bot):
         """Responds with a simple message."""
         await ctx.send('Hello! I am your bot.')
 
+    @bot.command()
+    async def translate(ctx, *, text: str):
+        """Translates the provided text and sends it back."""
+        translated_text = translate_text_auto(text)
+        await ctx.send(translated_text)
+
 def bot_initialize(prefix):
     """ 
     initialize the discord bot 
@@ -45,7 +53,7 @@ def bot_initialize(prefix):
     :param prefix: the symbol character that the bot will use
     """
     
-    intents=discord.Intents.default()
+    intents=discord.Intents.all()
     intents.messages = True
     intents.guild_messages = True
 
@@ -58,6 +66,20 @@ def bot_initialize(prefix):
 
     return bot
 
+def get_token(config):
+    """ 
+    gets the discord token from ini or env
+
+    :param config: the config file to try and get the token
+    """
+    token = config['Discord']['Token']
+    if (token == 'PASTE_BOT_TOKEN_HERE'):
+        token = os.getenv('DISCORD_BOT_TOKEN')
+        if token == None:
+            exit("discord token could not be retrieved \nplease edit config.ini or add the bot token to env")
+            raise SystemExit
+    return token
+
 def run_bot():
 
     # Get prefix from config
@@ -69,5 +91,5 @@ def run_bot():
     bot = bot_initialize(prefix)
 
     # Get token and run bot
-    token = config['Discord']['Token']
+    token = get_token(config)
     bot.run(token)
