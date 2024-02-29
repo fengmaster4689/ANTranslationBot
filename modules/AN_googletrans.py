@@ -34,13 +34,14 @@ def translate_text_auto(text):
     src = detect.lang
     print(f"detected language: {src}")
     dest = get_dest(src)
-    text = ""
+    outputText = ""
     if (src == dest):
-        text = (f"unconfigured language, detected language: {dest}")
+        outputText = (f"unconfigured language, detected language: {dest}")
     else:
         try:
             translation = translator.translate(text, src=src, dest=dest)
-            text = translation.text
+            outputText = translation.text
         except Exception as e:
-            text = (f"An error occurred: {e}")
-    return text
+            print(f"found text is: {text}")
+            outputText = (f"An error occurred: {e}")
+    return outputText

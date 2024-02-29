@@ -5,6 +5,8 @@ import discord
 from discord.ext import commands
 from modules.AN_googletrans import *
 
+bAutoTranslate: bool = False
+
 def bot_events(bot):
     """ 
     creates the events that the bot uses 
@@ -14,6 +16,20 @@ def bot_events(bot):
     @bot.event
     async def on_ready():
         print(f'Logged in as {bot.user.name}')
+
+    @bot.event
+    async def on_message(message):
+        # Do not let the bot reply to itself or other bots
+        if bAutoTranslate:
+            if message.author == bot.user or message.author.bot:
+                print("bot message, ignored")
+                return
+            print(f"reading: {message}")
+            translated_text = translate_text_auto(message)
+            await message.channel.send(translated_text)
+            
+        # Important: This line is necessary to process commands
+        await bot.process_commands(message)
 
 def bot_commands(bot):
     """ 
@@ -31,6 +47,11 @@ def bot_commands(bot):
         """Translates the provided text and sends it back."""
         translated_text = translate_text_auto(text)
         await ctx.send(translated_text)
+
+    @bot.command()
+    async def auto_translate(ctx, *, flag: bool):
+        bAutoTranslate = flag
+        await ctx.send(f"auto translate set to {bAutoTranslate}")
 
 def bot_initialize(prefix):
     """ 

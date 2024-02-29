@@ -20,7 +20,7 @@ design:
 - version controlled in github
 - simple unit tests for code
 - each commit should run CI/CD
-	- build, run, test, doxygen
+	- build, run, test, doxygen/sphinx
 	- should run in a ubuntu docker container
 - runs in AWS cloud
 	- AWS controlled by terraform
