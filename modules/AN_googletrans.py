@@ -43,5 +43,6 @@ def translate_text_auto(text):
             outputText = translation.text
         except Exception as e:
             print(f"found text is: {text}")
-            outputText = (f"An error occurred: {e}")
+            #outputText = (f"An error occurred: {e}")
+            return False
     return outputText

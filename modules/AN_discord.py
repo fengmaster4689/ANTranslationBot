@@ -6,6 +6,8 @@ from discord.ext import commands
 from modules.AN_googletrans import *
 
 bAutoTranslate: bool = False
+bAutoTranslateUser = []
+bAutoTranslateChannel = []
 
 def bot_events(bot):
     """ 
@@ -20,13 +22,14 @@ def bot_events(bot):
     @bot.event
     async def on_message(message):
         # Do not let the bot reply to itself or other bots
-        if bAutoTranslate:
+        if bAutoTranslate and (message.channel.id in bAutoTranslateChannel):
             if message.author == bot.user or message.author.bot:
                 print("bot message, ignored")
                 return
             print(f"reading: {message}")
-            translated_text = translate_text_auto(message)
-            await message.channel.send(translated_text)
+            translatedText = translate_text_auto(message)
+            if(translatedText):
+                await message.channel.send(translatedText)
             
         # Important: This line is necessary to process commands
         await bot.process_commands(message)
@@ -38,20 +41,30 @@ def bot_commands(bot):
     :param bot: the bot instance to assign the command to
     """
     @bot.command()
-    async def hello(ctx):
-        """Responds with a simple message."""
-        await ctx.send('Hello! I am your bot.')
-
-    @bot.command()
     async def translate(ctx, *, text: str):
         """Translates the provided text and sends it back."""
-        translated_text = translate_text_auto(text)
-        await ctx.send(translated_text)
+        translatedText = translate_text_auto(text)
+        if(translatedText):
+            await ctx.send(translatedText)
 
     @bot.command()
-    async def auto_translate(ctx, *, flag: bool):
+    async def enable_auto_translate(ctx, *, flag: bool):
+        global bAutoTranslate 
         bAutoTranslate = flag
         await ctx.send(f"auto translate set to {bAutoTranslate}")
+
+    @bot.command()
+    async def enable_channel(ctx, *, id: str):
+        global bAutoTranslateChannel
+        id = int(id[2:-1]) #remove the <# prefix and > suffix
+        print(id)
+        for channel in ctx.guild.channels:
+            print(channel.id)
+            if channel.id == id:
+                bAutoTranslateChannel.append(id)
+                await ctx.send(f"added channel: {channel.name}")
+                break
+        
 
 def bot_initialize(prefix):
     """ 
